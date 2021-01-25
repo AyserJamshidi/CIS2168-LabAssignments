@@ -1,33 +1,5 @@
-import java.util.Scanner;
-
 public class Rabbit extends Animal {
-
-	final int MODEL_NAME = 0;
-	final int MODEL_DIST = 1;
-
-	Scanner testThing = new Scanner(System.in);
-	int[][] scannedArea = null;
-	int currentTurn = 0;
-	int previousDistanceFromFox = -1;
-
-	// Edge checking
-	boolean isAcceptablePosition = false;
-
-	// After we found a good bush
-	boolean bushIsSetup = false;
-	int bushDirection = -1;
-
-	// Weighted movement
-	int[] movementArray = new int[]{
-			0, // North
-			0, // North East
-			0, // East
-			0, // South East
-			0, // South
-			0, // South West
-			0, // West
-			0, // North West
-	};
+	private int turnsToWait = 0;
 
 	public Rabbit(Model model, int row, int column) {
 		super(model, row, column);
@@ -35,181 +7,147 @@ public class Rabbit extends Animal {
 
 	// Map is 20x20 tiles
 	int decideMove() {
-
-		scanArea(); // Set scannedArea var
-		currentTurn++;
-
-		if (modelIsInView(Model.FOX)) {
-			previousDistanceFromFox = closestOf(Model.FOX, "DISTANCE");
-			int foxDirection = closestOf(Model.FOX, "DIRECTION");
-
-			/*
-			 * If fox is 3 tiles away {
-			 *      If we're 1 tile from a bush:
-			 *          If we're N, S, E or W of said bush:
-			 *              do nothing
-			 *          Else:
-			 *              move to a tile that will put us in such position
-			 *              (This can be done by getting the direction and % 2...  If not 0, then turn 1 or -1 maybe?)
-			 * }
-			 *
-			 * If fox is 1 tile away {
-			 *      If we're 1 tile from a bush:
-			 *          If we're N, S, E or W of said bush:
-			 *              Move diagonally to LOS fox
-			 *          else
-			 *              ????????
-			 * }
-			 */
-
-			/*if (!bushIsSetup) {
-				if (modelIsInDistance(Model.FOX, 2)) { // We're in danger soon
-					System.out.println("Time to dip!!");
-					return testThing.nextInt();
-				}
-
-				System.out.println("Side-step time?");
-				return testThing.nextInt();
-			} else */
-
-			if (canMove(Model.turn(bushDirection, 1))
-					&& foxDirection != Model.turn(bushDirection, 1)
-					&& foxDirection != Model.turn(bushDirection, 1 + 4)) { // Look right
-				System.out.println("Turning right == " + Model.turn(bushDirection, 1));
-
-				if (closestOf(Model.BUSH, "DISTANCE") == 1)
-					return bushDirection;
-				else {
-					bushDirection = Model.turn(bushDirection, -2);
-					return Model.turn(bushDirection, 1);
-				}
-			} else if (canMove(Model.turn(bushDirection, -1))
-					&& foxDirection != Model.turn(bushDirection, -1)
-					&& foxDirection != Model.turn(bushDirection, -1 + 4)) { // Look left
-				System.out.println("Turning left == " + Model.turn(bushDirection, -1));
-				bushDirection = Model.turn(bushDirection, 2);
-				return Model.turn(bushDirection, -1);
-			}
-
-			System.out.println("UHHHH WHERE DO WE MOVE?!");
-			return testThing.nextInt();
-
-		}
-
-		if (!isAcceptablePosition) {
-			if (closestOf(Model.EDGE, "DISTANCE") <= 5) {
-				int movementDirection = Model.turn(closestOf(Model.EDGE, "DIRECTION"), 4); // 180 degree turn
-				System.out.println("INSIDE !ACCEPTABLE");
-				if (canMove(movementDirection))
-					return movementDirection;
-				else if (canMove(movementDirection - 1))
-					return movementDirection - 1;
-				else if (canMove(movementDirection + 1))
-					return movementDirection + 1;
-
-				System.out.println("WHERE DO WE MOVE?!?!");
-				return testThing.nextInt();
-			} else
-				isAcceptablePosition = true;
-		}
-
-		// Bush handling
-		if (modelIsInView(Model.BUSH)) { // Walk to bush
-			bushDirection = closestOf(Model.BUSH, "DIRECTION");
-
-			if (closestOf(Model.BUSH, "DISTANCE") == 1) { // We're set up at a good bush!
-				switch (bushDirection) {
-					case Model.N, Model.E, Model.S, Model.W -> {
-						bushIsSetup = true;
-						System.out.println("We're in a good position for a bush!");
-						return Model.STAY; // We're in a proper position!
-					}
-					default -> {
-						if (canMove(bushDirection - 1))
-							return bushDirection - 1;
-						else if (canMove(bushDirection + 1))
-							return bushDirection + 1;
-						System.out.println("Where do we move now?!");
-					}
-				}
-
-				System.out.println("Next to a bush!");
-			} else {
-				System.out.println("Found a bush but now we have to walk to it! == " + bushDirection);
-				return bushDirection;
-				//return testThing.nextInt();
-			}
-		} else
-			bushDirection = -1;
-		// Look for bush
-		if (bushDirection != -1) { // Walk towards bush
-			System.out.println("Attempting to walk to bush");
-		}
-
-		System.out.println("How did we get here??");
-		return testThing.nextInt();
-	}
-
-	private boolean modelIsInView(final int givenModel) {
-		return modelIsInDistance(givenModel, 20);
-	}
-
-	private boolean modelIsInDistance(final int givenModel, final int givenDistance) {
-		for (int[] currentModel : scannedArea)
-			if (currentModel[MODEL_NAME] == givenModel && currentModel[MODEL_DIST] <= givenDistance)
-				return true;
-
-		return false;
-	}
-
-	private int closestOf(final int givenModel, final String desiredValue) {
-		int closestModelDistance = Integer.MAX_VALUE;
-		int closestModelDirection = -1;
-
-		for (int curModel = 0; curModel <= Model.MAX_DIRECTION; curModel++) {
-			if (scannedArea[curModel][MODEL_NAME] == givenModel && scannedArea[curModel][MODEL_DIST] < closestModelDistance) {
-				closestModelDistance = scannedArea[curModel][MODEL_DIST];
-				closestModelDirection = curModel;
-			}
-		}
-
-		return switch (desiredValue) {
-			case "DISTANCE" -> closestModelDistance;
-			case "DIRECTION" -> closestModelDirection;
-			default -> throw new IllegalArgumentException("Must claim \"DISTANCE\" or \"DIRECTION\"");
+		int[] movementArray = new int[]{
+				0, // North
+				0, // North East
+				0, // East
+				0, // South East
+				0, // South
+				0, // South West
+				0, // West
+				0, // North West
 		};
-	}
 
-	private void scanArea() {
-		int[][] scannedArea = new int[8][2];
+		if (foxDistance() != -1) { // If we can see the fox, time to move!
+			int foxDistance = foxDistance();
+			int foxDirection = foxDirection();
+			turnsToWait = 5;
 
-		for (int curDirection = Model.MIN_DIRECTION; curDirection <= Model.MAX_DIRECTION; curDirection++) {
-			scannedArea[curDirection][MODEL_NAME] = look(curDirection);
-			scannedArea[curDirection][MODEL_DIST] = distance(curDirection);
+			///System.out.println("== " + foxDirection());
+
+			// Set up initial weights
+			for (int i = 0; i < movementArray.length; i++)
+				movementArray[i] = (distance(i) > 3) ? 2 : 0;
+
+			// Weights that do not check the fox's distance have no risk of dying next turn.
+			switch (foxDirection) {
+				case Model.N -> {
+					movementArray[Model.SW] += 5;
+					movementArray[Model.SE] += 5;
+					movementArray[Model.W] += (foxDistance > 1) ? 4 : 0;
+					movementArray[Model.E] += (foxDistance > 1) ? 4 : 0;
+					movementArray[Model.NW] += (foxDistance > 2) ? 3 : 0;
+					movementArray[Model.NE] += (foxDistance > 2) ? 3 : 0;
+				}
+				case Model.NE -> {
+					movementArray[Model.W] = movementArray[Model.S] = 5;
+					movementArray[Model.N] = movementArray[Model.E] = (foxDistance > 2) ? 4 : 2;
+					movementArray[Model.SW] = movementArray[Model.NW] = movementArray[Model.SE] = 3;
+				}
+				case Model.E -> {
+					movementArray[Model.NW] = movementArray[Model.SW] = 5;
+					movementArray[Model.N] = movementArray[Model.S] = (foxDistance > 1) ? 4 : 0;
+					movementArray[Model.NE] = movementArray[Model.SE] = (foxDistance > 2) ? 3 : 0;
+				}
+				case Model.SE -> {
+					movementArray[Model.W] = movementArray[Model.N] = 5;
+					movementArray[Model.S] = movementArray[Model.E] = (foxDistance > 2) ? 5 : 3;
+					movementArray[Model.NE] = movementArray[Model.SW] = 4;
+					movementArray[Model.NW] = 2;
+					movementArray[Model.SE] = 1;
+				}
+				case Model.S -> {
+					movementArray[Model.NW] = movementArray[Model.NE] = 5;
+					movementArray[Model.W] = movementArray[Model.E] = (foxDistance > 1) ? 4 : 0;
+					movementArray[Model.SW] = movementArray[Model.SE] = (foxDistance > 2) ? 3 : 0;
+				}
+				case Model.SW -> {
+					movementArray[Model.N] = movementArray[Model.E] = 5;
+					movementArray[Model.NW] = movementArray[Model.SE]
+							= movementArray[Model.W] = movementArray[Model.S] = (foxDistance > 2) ? 4 : 2;
+					movementArray[Model.NE] = 1;
+				}
+				case Model.W -> {
+					movementArray[Model.NE] = movementArray[Model.SE] = 5;
+					movementArray[Model.N] = movementArray[Model.S] = (foxDistance > 1) ? 4 : 0;
+					movementArray[Model.NW] = movementArray[Model.SW] = (foxDistance > 2) ? 3 : 0;
+				}
+				case Model.NW -> {
+					movementArray[Model.E] = movementArray[Model.S] = 5;
+					movementArray[Model.SW] = movementArray[Model.NE] = (foxDistance > 2) ? 4 : 2;
+					movementArray[Model.W] = movementArray[Model.N] = (foxDistance > 2) ? 4 : 1;
+					movementArray[Model.SE] = 2;
+				}
+			}
+		} else {
+			if (turnsToWait <= 0) {
+				return roamDirection();
+			}
+			turnsToWait--;
 		}
 
-		this.scannedArea = scannedArea;
+		for (int i = Model.MIN_DIRECTION; i <= Model.MAX_DIRECTION; i++) {
+			if (distance(i) <= 2 && movementArray[i] > 0)
+				movementArray[i] -= 1;
+		}
+
+		return movementDecision(movementArray);
 	}
 
-	/*private int getClosest(int givenModel) {
-		return getClosest(givenModel, "DIRECTION");
-	}
+	private int roamDirection() {
+		int direction = Model.STAY;
+		int previousDistance = 0;
 
-	private int getClosest(int givenModel, String desiredOutput) {
-		int closestModelDirection = -1;
-		int closestModelDistance = Integer.MAX_VALUE;
+		for (int i = Model.MIN_DIRECTION; i <= Model.MAX_DIRECTION; i++) {
+			int distance = distance(i);
 
-		for (int curDirection = Model.MIN_DIRECTION; curDirection <= Model.MAX_DIRECTION; curDirection++) {
-			if (look(curDirection) == givenModel && distance(curDirection) < closestModelDistance) {
-				closestModelDistance = distance(curDirection);
-				closestModelDirection = curDirection;
+			// If we're hitting this far of a distance, we're close to an edge. We NEED to move this direction!
+			if (distance > 17 && distance > previousDistance) {
+				direction = i;
+				previousDistance = distance;
 			}
 		}
 
-		return switch (desiredOutput) {
-			case "DISTANCE" -> closestModelDistance;
-			case "DIRECTION" -> closestModelDirection;
-			default -> throw new IllegalArgumentException("Must claim \"DISTANCE\" or \"DIRECTION\"");
-		};
-	}*/
+		return direction;
+	}
+
+	/**
+	 * @param movementWeights expected to be 8 elements unless you really want unexpected behavior
+	 */
+	private int movementDecision(int[] movementWeights) {
+		int decision = Model.STAY;
+		int decisionWeight = 0;
+
+		for (int i = 0; i < movementWeights.length; i++)
+			if (canMove(i) && movementWeights[i] > decisionWeight) {
+				decision = i;
+				decisionWeight = movementWeights[i];
+			}
+
+		return decision;
+	}
+
+	private int foxDistance() {
+		for (int i = Model.MIN_DIRECTION; i <= Model.MAX_DIRECTION; i++)
+			if (look(i) == Model.FOX)
+				return distance(i);
+
+		return -1;
+	}
+
+	private int foxDirection() {
+		for (int i = Model.MIN_DIRECTION; i <= Model.MAX_DIRECTION; i++)
+			if (look(i) == Model.FOX)
+				return i;
+
+		return -1;
+	}
+
+	private int modelIsTilesAway(int tileCount) {
+		for (int i = Model.MIN_DIRECTION; i <= Model.MAX_DIRECTION; i++)
+			if (distance(i) <= tileCount)
+				return i;
+
+		return -1;
+	}
 }
