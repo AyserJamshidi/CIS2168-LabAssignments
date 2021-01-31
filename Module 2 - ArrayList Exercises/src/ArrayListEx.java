@@ -32,7 +32,9 @@ public class ArrayListEx {
 		testListThree.add("Test");
 		testListThree.add("Test");
 		testListThree.add("test");
-		System.out.println("isPermutation == " + isPermutation(testList, testListThree));
+		System.out.println("isPermutation == " + isPermutation(testList, testListThree)); // Expect true
+		testListThree.remove("Test");
+		System.out.println("isPermutation == " + isPermutation(testList, testListThree)); // Expect false
 
 		// 2.5 String To List of Words
 		System.out.println("stringToListOfWords == " + stringToListOfWords("Hello!     This is a test.")); // Expect [Hello, This, is, a, test]
