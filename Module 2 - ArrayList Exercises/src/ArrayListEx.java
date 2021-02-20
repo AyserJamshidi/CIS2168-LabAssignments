@@ -21,7 +21,7 @@ public class ArrayListEx {
 		testListTwo.add(13);
 		testListTwo.add(15);
 		testListTwo.add(125);
-		System.out.println("allMultilpes == " + allMultiples(testListTwo, 2));
+		System.out.println("allMultilpes == " + allMultiples(testListTwo, 2)); // Expect 2, 10
 
 		// 2.3 All Strings of Size
 		System.out.println("allStringsOfSize == " + allStringsOfSize(testList, 5)); // Expect nothing
@@ -57,7 +57,7 @@ public class ArrayListEx {
 		List<Integer> outputList = new ArrayList<>();
 
 		for (int curNumber : givenList) // Loop every number in the given list
-			if (curNumber % divisor == 0) // Check if curNumber is divislbe by divisor.
+			if (curNumber % divisor == 0) // Check if curNumber is divisible by divisor.
 				outputList.add(curNumber);
 
 		return outputList;
