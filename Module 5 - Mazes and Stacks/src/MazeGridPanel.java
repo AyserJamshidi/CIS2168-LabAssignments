@@ -22,7 +22,6 @@ public class MazeGridPanel extends JPanel {
 	Stack<Cell> stack = new Stack<>();
 	Cell start, finish, current;
 
-
 	// extra credit
 	public void genDFSMaze() {
 		boolean[][] visited;
@@ -39,17 +38,15 @@ public class MazeGridPanel extends JPanel {
 		if (!stack.empty()) { // We can keep searching
 			current = stack.peek(); // Sets the current cell to the cell at the top of the stack
 
-			// North and west movement disabled because we never need to move those directions for this assignment
 			if (!current.equals(finish)) { // We're not at the "finish" cell
-				/*if (!current.northWall && !visited(current.row - 1, current.col)) { // Can move up
+				if (!current.northWall && !visited(current.row - 1, current.col)) { // Can move up
 					moveVertically(stack, current, -1);
-				} else*/ if (!current.southWall && !visited(current.row + 1, current.col)) { // Can move down
+				} else if (!current.southWall && !visited(current.row + 1, current.col)) { // Can move down
 					moveVertically(stack, current, 1); // Move down
 				} else if (!current.eastWall && !visited(current.row, current.col + 1)) { // Can move right
 					moveHorizontally(stack, current, 1); // Move right
-				/* } else if (!current.westWall && !visited(current.row, current.col - 1)) { // Can move left
+				} else if (!current.westWall && !visited(current.row, current.col - 1)) { // Can move left
 					moveHorizontally(stack, current, -1); // Move left
-				}*/
 				} else { // Can't move any further,
 					ignore(current); // Mark cell as ignored
 					stack.pop(); // Move back one
@@ -119,7 +116,8 @@ public class MazeGridPanel extends JPanel {
 			public void run() {
 				try {
 					Thread.sleep(1); // Quick sleep to assist in visualization
-				} catch (InterruptedException e) {}
+				} catch (InterruptedException e) {
+				}
 
 				solveMaze();
 			}
