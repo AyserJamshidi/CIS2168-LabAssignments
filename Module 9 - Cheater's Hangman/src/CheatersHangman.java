@@ -35,7 +35,7 @@ public class CheatersHangman {
 			System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 
 			stepA(correctLetters, guessedLetters, desiredWordSize, maxGuessAttempts);
-			System.out.println("wordFamily Size: " + wordFamily.size());
+//			System.out.println("wordFamily Size: " + wordFamily.size());
 			char guessedLetter = stepB(guessedLetters);
 			boolean guessedCorrectly = stepC(guessedLetter, wordFamily);
 
@@ -49,11 +49,11 @@ public class CheatersHangman {
 		}
 
 		// Win/Lose output
-		results(wordFamily, guessedLetters, maxGuessAttempts);
+		results(wordFamily, guessedLetters, correctLetters, maxGuessAttempts);
 	}
 
-	public static void results(List<String> wordFamily, Set<Character> guessedLetters, int maxGuessAttempts) {
-		if (guessedLetters.size() >= maxGuessAttempts) { // You lose!
+	public static void results(List<String> wordFamily, Set<Character> guessedLetters, Map<Integer, Character> correctLetters, int maxGuessAttempts) {
+		if ((maxGuessAttempts - (guessedLetters.size() - correctLetters.size())) == 0) { // You lose!
 			StringBuilder outputString = new StringBuilder();
 
 			outputString.append("You've ran out of guesses!  The word was ");

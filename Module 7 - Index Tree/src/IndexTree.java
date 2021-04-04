@@ -162,20 +162,11 @@ public class IndexTree {
 		// print out the index
 		index.printIndex();
 
-		try {
-			Thread.sleep(1000);
-		} catch (Exception ex) {}
-
 		System.out.println("Deleting...");
 		// test removing a word from the index
 		index.delete("zwaggerd");
 		index.delete("zounds");
 		index.delete("zodiacs");
-
-		try {
-			Thread.sleep(1000);
-		} catch (Exception ex) {}
-
 
 		// print out the index again
 		index.printIndex();
