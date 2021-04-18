@@ -31,52 +31,60 @@ public class Rabbit extends Animal {
 
 			// Weights that do not check the fox's distance have no risk of dying next turn.
 			switch (foxDirection) {
-				case Model.N -> {
+				case Model.N: {
 					movementArray[Model.SW] += 5;
 					movementArray[Model.SE] += 5;
 					movementArray[Model.W] += (foxDistance > 1) ? 4 : 0;
 					movementArray[Model.E] += (foxDistance > 1) ? 4 : 0;
 					movementArray[Model.NW] += (foxDistance > 2) ? 3 : 0;
 					movementArray[Model.NE] += (foxDistance > 2) ? 3 : 0;
+					break;
 				}
-				case Model.NE -> {
+				case Model.NE: {
 					movementArray[Model.W] = movementArray[Model.S] = 5;
 					movementArray[Model.N] = movementArray[Model.E] = (foxDistance > 2) ? 4 : 2;
 					movementArray[Model.SW] = movementArray[Model.NW] = movementArray[Model.SE] = 3;
+					break;
 				}
-				case Model.E -> {
+				case Model.E: {
 					movementArray[Model.NW] = movementArray[Model.SW] = 5;
 					movementArray[Model.N] = movementArray[Model.S] = (foxDistance > 1) ? 4 : 0;
 					movementArray[Model.NE] = movementArray[Model.SE] = (foxDistance > 2) ? 3 : 0;
+					break;
 				}
-				case Model.SE -> {
+				case Model.SE: {
 					movementArray[Model.W] = movementArray[Model.N] = 5;
 					movementArray[Model.S] = movementArray[Model.E] = (foxDistance > 2) ? 5 : 3;
 					movementArray[Model.NE] = movementArray[Model.SW] = 4;
 					movementArray[Model.NW] = 2;
 					movementArray[Model.SE] = 1;
+					break;
 				}
-				case Model.S -> {
+				case Model.S: {
 					movementArray[Model.NW] = movementArray[Model.NE] = 5;
 					movementArray[Model.W] = movementArray[Model.E] = (foxDistance > 1) ? 4 : 0;
 					movementArray[Model.SW] = movementArray[Model.SE] = (foxDistance > 2) ? 3 : 0;
+					break;
 				}
-				case Model.SW -> {
+				case Model.SW: {
 					movementArray[Model.N] = movementArray[Model.E] = 5;
 					movementArray[Model.NW] = movementArray[Model.SE]
 							= movementArray[Model.W] = movementArray[Model.S] = (foxDistance > 2) ? 4 : 2;
 					movementArray[Model.NE] = 1;
+					break;
 				}
-				case Model.W -> {
+				case Model.W: {
 					movementArray[Model.NE] = movementArray[Model.SE] = 5;
 					movementArray[Model.N] = movementArray[Model.S] = (foxDistance > 1) ? 4 : 0;
 					movementArray[Model.NW] = movementArray[Model.SW] = (foxDistance > 2) ? 3 : 0;
+					break;
 				}
-				case Model.NW -> {
+				case Model.NW: {
 					movementArray[Model.E] = movementArray[Model.S] = 5;
 					movementArray[Model.SW] = movementArray[Model.NE] = (foxDistance > 2) ? 4 : 2;
 					movementArray[Model.W] = movementArray[Model.N] = (foxDistance > 2) ? 4 : 1;
 					movementArray[Model.SE] = 2;
+					break;
 				}
 			}
 		} else {

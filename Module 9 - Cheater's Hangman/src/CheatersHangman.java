@@ -4,9 +4,12 @@ import java.util.*;
 
 public class CheatersHangman {
 
+	// private static final String DICTIONARY_PATH = "Module 9 - Cheater's Hangman/src/words.txt";
+	private static final String DICTIONARY_PATH = "Module 9 - Cheater's Hangman/src/words.txt";
+
 	public static void main(String[] args) throws FileNotFoundException {
 		// Things that don't really change (except the dictionary)
-		Scanner dictionary = new Scanner(new File("Module 9 - Cheater's Hangman/src/words.txt")); // Step 1
+		Scanner dictionary = new Scanner(new File(DICTIONARY_PATH)); // Step 1
 		final Set<Character> guessedLetters = new HashSet<>(); // User's guessed letters
 		final Map<Integer, Character> correctLetters = new HashMap<>(); // Added by us so we can choose a word on the fly
 
@@ -22,7 +25,7 @@ public class CheatersHangman {
 				System.out.println("We couldn't find any words in our dictionary with " + desiredWordSize + " letters!");
 
 				// Reset the dictionary as scanner must always start from the beginning
-				dictionary = new Scanner(new File("Module 9 - Cheater's Hangman/src/words.txt"));
+				dictionary = new Scanner(new File(DICTIONARY_PATH));
 				wordFamily = null;
 			}
 		}
