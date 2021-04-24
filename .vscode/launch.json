@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch Main",
+            "request": "launch",
+            "mainClass": "Main",
+            "projectName": "CIS2168-LabAssignments_8b89398a"
+        },
+        {
+            "type": "java",
             "name": "Module 11 - Graphs",
             "request": "launch",
             "mainClass": "Graphs",

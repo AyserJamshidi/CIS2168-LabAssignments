@@ -4,7 +4,7 @@
         "Module 11 - Graphs/lib/**/*.jar"
     ],
     "java.project.sourcePaths": [
-        "*/src",
+        "Module 12 - Password Cracking/src",
         "Module 11 - Graphs/src",
         "Module 10 - Sorting Algorithms/src",
         "Module 9 - Cheater's Hangman/src",
